@@ -99,7 +99,7 @@ class Article < ApplicationRecord
   def message_on_published
     if published?
       '公開しました'
-    elsif  publish_wait?
+    elsif publish_wait?
       '公開待ちにしました'
     end
   end
