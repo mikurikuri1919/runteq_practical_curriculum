@@ -131,6 +131,9 @@ group :development, :test do
   gem 'capistrano-rbenv'
   gem 'capistrano-resque', require: false
   gem 'capistrano3-puma'
+
+  # Background Job
+  gem 'whenever', require: false
 end
 
 group :test do
