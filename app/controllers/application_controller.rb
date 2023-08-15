@@ -9,11 +9,12 @@ class ApplicationController < ActionController::Base
   before_action :current_site
   before_action :init_components
 
+  
   def current_site
     @current_site ||= Site.first
   end
   helper_method :current_site
-
+  
   def preview!
     @preview = true
   end
@@ -22,29 +23,35 @@ class ApplicationController < ActionController::Base
     @preview
   end
   helper_method :preview?
-
+  
   def hide_pagination!
     @components[:pagination] = false
   end
-
+  
   def pagination?
     @components[:pagination]
   end
   helper_method :pagination?
-
+  
   def hide_new_arrivals!
     @components[:new_arrivals] = false
   end
-
+  
   def new_arrivals?
     @components[:new_arrivals]
   end
   helper_method :new_arrivals?
-
+  
   def categories?
     @components[:categories]
   end
   helper_method :categories?
+
+  class ApplicationController < ActionController::Base
+    include Pundit
+
+    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  end
 
   private
 
@@ -54,5 +61,9 @@ class ApplicationController < ActionController::Base
       new_arrivals: true,
       categories: true
     }
+  end
+
+  def user_not_authorized
+    render 'error/403', status: :forbidden
   end
 end
