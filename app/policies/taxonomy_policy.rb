@@ -3,8 +3,7 @@ class TaxonomyPolicy < ApplicationPolicy
     user.admin? || user.editor?
   end
 
-  def create?
-  end
+  def create?; end
 
   def update?
     user.admin? || user.editor?
