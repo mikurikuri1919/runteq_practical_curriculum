@@ -1,34 +1,40 @@
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe "admin_articles_previews", type: :system do
-  let(:user) { create(:user, :admin) }
-
+RSpec.describe 'AdminArticlesPreview', type: :system do
+  let(:admin) { create :user, :admin }
   before do
-    login(user)
-    visit new_admin_article_path
-    fill_in 'article[title]', with: 'test'
-    fill_in 'article[slug]', with: 'test'
-    fill_in 'article[description]', with: 'test'
-    click_button '登録する'
-    click_link 'ブロックを追加する'
+    login(admin)
   end
-
   describe '記事作成画面で画像ブロックを追加' do
-    context '文章ブロックを選択してプレビューする場合' do
-      it 'エラーが発生しない' do
-        click_link '文章'
-        click_link 'プレビュー'
-        expect(page).not_to have_content("no implicit conversion of nil into String"), 'エラーページが表示されています'
-        expect(page).to have_content('test'), 'プレビューページが正しく表示されていません'
-      end
-    end
-
-    context '画像ブロックを選択してプレビューする場合' do
-      it 'エラーが発生しない' do
+    context '画像を添付せずにプレビューを閲覧' do
+      it '正常に表示される' do
+        click_link '記事'
+        visit admin_articles_path
+        click_link '新規作成'
+        fill_in 'タイトル', with: 'テスト記事'
+        fill_in 'スラッグ', with: 'test'
+        click_button('登録する')
+        click_link 'ブロックを追加する'
         click_link '画像'
         click_link 'プレビュー'
+        switch_to_window(windows.last)
         expect(page).not_to have_content("Nil location provided. Can't build URI"), 'エラーページが表示されています'
-        expect(page).to have_content('test'), 'プレビューページが正しく表示されていません'
+        expect(page).to have_content('テスト記事'), 'プレビューページが正しく表示されていません'
+      end
+    end
+  end
+
+  describe '記事作成画面でテキストブロックを追加' do
+    let!(:article) { create :article }
+    context 'テキストを入力せずにプレビューを閲覧' do
+      it '記事プレビュー画面に遷移できることを確認' do
+        visit edit_admin_article_path(article.uuid)
+        click_link 'ブロックを追加する'
+        click_link '文章'
+        click_link 'プレビュー'
+        switch_to_window(windows.last)
+        expect(page).to have_content(article.title), 'プレビューページが正しく表示されていません'
+        expect(page).not_to have_content('no implicit conversion of nil into String'), 'プレビューページがエラー画面になっています'
       end
     end
   end

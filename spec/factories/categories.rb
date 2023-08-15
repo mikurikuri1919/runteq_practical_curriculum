@@ -20,6 +20,6 @@ FactoryBot.define do
   factory :category do
     type { 'Category' }
     sequence(:name) { |n| "応用課題#{n}" }
-    sequence(:slug) { |n| "ouyo-kadai#{n}" }
+    sequence(:slug) { |n| "ouyou-kadai#{n}" }
   end
 end
