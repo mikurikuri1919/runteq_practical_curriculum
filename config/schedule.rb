@@ -17,3 +17,7 @@ job_type :rake, "source /Users/[ユーザー名]/.zshrc; export PATH=\"$HOME/.rb
 every :hour do
   rake 'article_state:change_to_be_published'
 end
+
+every 1.day, at: '9am' do
+  rake 'article_summary:mail_article_summary'
+end
